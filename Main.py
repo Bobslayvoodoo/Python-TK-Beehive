@@ -93,14 +93,17 @@ class AssignmentClass():
         SetByFrame = ttk.Frame(InfoFrame)
         SetByFrame.grid(row=1,column=0,sticky=tk.EW)
 
+        SpacerFrame = ttk.Frame(MainFrame)
+        SpacerFrame.grid(row=0,rowspan=10,column=0,columnspan=10,padx=400)
 
         DetailsFrame = ttk.Frame(MainFrame)
         DetailsFrame.grid(row=2,column=0,sticky=tk.EW)
 
         DetailTextLabel = ttk.Label(DetailsFrame,text="Description: ")
         DetailTextLabel.grid(row=0,column=0,sticky=tk.N)
-        
-        DescriptionLabel = ttk.Label(DetailsFrame,text=ResponseJson["details"])
+
+        print(MainFrame.winfo_width())
+        DescriptionLabel = ttk.Label(DetailsFrame,text=ResponseJson["details"],wraplength=600,justify = "left")
         DescriptionLabel.grid(row=0,column=1)
         
         return MainFrame
@@ -176,15 +179,16 @@ class Beehive():
             
             NewFrame = ttk.Frame(AssignmentsSmallFrame,borderwidth=2,relief="groove")
             NewFrame.grid(sticky=tk.EW,row=n,pady=2)
-            
             NewFrame.bind("<Button-1>",Assignment.DisplaySelf)
             
             TitleLabel = ttk.Label(NewFrame,text=Assignment.Title,foreground=colour)
             TitleLabel.grid(row=0,column=0,sticky=tk.W)
+            TitleLabel.bind("<Button-1>",Assignment.DisplaySelf)
 
             Teacher = Assignment.SetBy
             TeacherLabel = ttk.Label(NewFrame,text=(Teacher["title"]+" "+ Teacher["lastName"]))
             TeacherLabel.grid(row=1,column=0,sticky=tk.W)
+            TeacherLabel.bind("<Button-1>",Assignment.DisplaySelf)
 
             SpacerFrame = ttk.Frame(NewFrame)
             SpacerFrame.grid(column=0,padx=200)
@@ -192,8 +196,7 @@ class Beehive():
             DueDate = Assignment.Deadline.split("T")[0]
             DeadlineLabel = ttk.Label(NewFrame,text=DueDate)
             DeadlineLabel.grid(row=0,rowspan=2,column=2,sticky=tk.E,padx=3)
-
-            
+            DeadlineLabel.bind("<Button-1>",Assignment.DisplaySelf)
         
 
     def GetUserName():
@@ -277,9 +280,11 @@ LogInButton.grid(row=0,column=2,rowspan=2,sticky=tk.EW)
 AssignmentsMainFrame = ttk.Frame(root)
 #AssignmentsMainFrame.grid(sticky=tk.EW)
 
+AssignmentsLeftFrame = ttk.Frame(AssignmentsMainFrame)
+AssignmentsLeftFrame.grid(row=0,sticky=tk.N)
 
-AssignmentsFilterFrame = ttk.Frame(AssignmentsMainFrame)
-AssignmentsFilterFrame.grid()
+AssignmentsFilterFrame = ttk.Frame(AssignmentsLeftFrame)
+AssignmentsFilterFrame.grid(row =0,sticky=tk.N)
 
 Filters = {
     "All":0,
@@ -300,8 +305,8 @@ for FilterName,x in Filters.items():
     FilterLabels.append(NewLabel)
     NewLabel.grid(row=0,column=x,padx=5,ipadx=2,sticky=tk.EW)
 
-AssignmentsCanvas = tk.Canvas(AssignmentsMainFrame,width=500,height=500)
-AssignmentsCanvas.grid(row=1,sticky=tk.NS)
+AssignmentsCanvas = tk.Canvas(AssignmentsLeftFrame,width=500,height=500)
+AssignmentsCanvas.grid(row=1,sticky=tk.N)
 
 SpaceFrame = ttk.Frame(AssignmentsMainFrame)
 SpaceFrame.grid(pady=300,row=1,column=0,sticky=tk.S)
